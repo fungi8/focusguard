@@ -27,6 +27,17 @@ cd android
 ./gradlew assembleDebug
 ```
 
+## Test On Device
+
+Open Settings & privacy in the app and enable:
+
+- FocusGuard Surface Detection in Android Accessibility settings
+- FocusGuard in Usage Access settings
+
+Then open Boundaries to configure app and surface actions. Surface actions are persisted locally.
+
+If a target app does not trigger an intervention, use Settings & privacy -> Refresh permission and detection status. Check the last observed package and last matched surface.
+
 ## Privacy
 
 FocusGuard stores rules and intervention events on-device. AccessibilityService is used only to detect user-defined high-risk surfaces and show interventions when a matching boundary is triggered. FocusGuard does not read messages, collect passwords, record the screen, collect keystrokes, or upload Accessibility data.

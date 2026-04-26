@@ -53,6 +53,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun FocusGuardAppUi(container: AppContainer) {
     var destination by remember { mutableStateOf(FocusGuardDestination.Onboarding) }
+    var selectedBoundaryApp by remember { mutableStateOf("YouTube") }
     val rules by container.boundaryRepository.rules.collectAsState(initial = emptyList())
     val events by container.attentionMirrorRepository.observeRecentEvents().collectAsState(initial = emptyList())
     val scope = rememberCoroutineScope()
@@ -96,11 +97,21 @@ private fun FocusGuardAppUi(container: AppContainer) {
             FocusGuardDestination.Boundaries -> BoundariesScreen(
                 rules = rules,
                 modifier = modifier,
-                onOpenDetail = { destination = FocusGuardDestination.BoundaryDetail }
+                onOpenDetail = {
+                    selectedBoundaryApp = it
+                    destination = FocusGuardDestination.BoundaryDetail
+                },
+                onSetAppEnabled = { appName, enabled ->
+                    scope.launch { container.boundaryRepository.setAppEnabled(appName, enabled) }
+                }
             )
             FocusGuardDestination.BoundaryDetail -> BoundaryDetailScreen(
-                rules = rules.filter { it.appName == "YouTube" },
+                appName = selectedBoundaryApp,
+                rules = rules.filter { it.appName == selectedBoundaryApp },
                 modifier = modifier,
+                onSetAction = { rule, action ->
+                    scope.launch { container.boundaryRepository.setAction(rule.id, action) }
+                },
                 onBack = { destination = FocusGuardDestination.Boundaries }
             )
             FocusGuardDestination.Moment -> MomentOfChoiceScreen(

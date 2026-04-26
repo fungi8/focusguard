@@ -43,6 +43,26 @@ The easiest realistic test is a physical Android phone.
 6. Tap Open Usage Access settings and allow FocusGuard.
 7. Open YouTube Shorts or Reddit Popular/All. FocusGuard should show a Moment of Choice when the bundled Essential boundary matches.
 
+## Configure Boundaries
+
+Open `Boundaries`, choose an app, then configure each surface independently:
+
+- `ALLOW`: no intervention
+- `WARN`: show a gentle Moment of Choice
+- `INTENT GATE`: ask why you came here
+- `BLOCK`: perform a back action and show a Moment of Choice
+
+The configuration is stored in the local Room database and takes effect for Accessibility detections.
+
+If YouTube Shorts does not trigger, open `Settings & privacy`, tap `Refresh permission and detection status`, and check:
+
+- Accessibility is enabled
+- Usage Access is enabled
+- Last package shows `com.google.android.youtube`
+- Last match shows `YouTube Shorts`
+
+If Last package updates but Last match is empty, the YouTube UI on that device is exposing different Accessibility text or view IDs and the matcher needs another heuristic.
+
 ## Emulator Or Phone?
 
 Use a physical phone for meaningful testing. Accessibility node trees and third-party app behavior are much closer to reality on a real device.

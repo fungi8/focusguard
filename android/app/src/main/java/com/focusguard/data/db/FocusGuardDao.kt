@@ -38,4 +38,10 @@ interface FocusGuardDao {
 
     @Query("UPDATE boundary_rules SET enabled = :enabled WHERE id = :id")
     suspend fun setBoundaryEnabled(id: String, enabled: Boolean)
+
+    @Query("UPDATE boundary_rules SET enabled = :enabled WHERE appName = :appName")
+    suspend fun setAppEnabled(appName: String, enabled: Boolean)
+
+    @Query("UPDATE boundary_rules SET action = :action WHERE id = :id")
+    suspend fun setBoundaryAction(id: String, action: String)
 }

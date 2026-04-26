@@ -2,6 +2,7 @@ package com.focusguard.service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
+import android.os.SystemClock
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.focusguard.FocusGuardApp
@@ -20,12 +21,28 @@ import kotlinx.coroutines.launch
 class AccessibilityDetectionService : AccessibilityService() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val lastLaunchBySurface = mutableMapOf<String, Long>()
+    private lateinit var diagnostics: DetectionDiagnostics
+
+    override fun onCreate() {
+        super.onCreate()
+        diagnostics = DetectionDiagnostics(applicationContext)
+    }
+
+    override fun onServiceConnected() {
+        diagnostics = DetectionDiagnostics(applicationContext)
+        super.onServiceConnected()
+    }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         val packageName = event?.packageName?.toString() ?: return
         val root = rootInActiveWindow
         val visibleText = root?.collectText().orEmpty()
         val viewIds = root?.collectViewIds().orEmpty()
+        diagnostics.recordEvent(
+            packageName = packageName,
+            className = event.className?.toString(),
+            textSample = visibleText.take(12).joinToString(" | ").take(240)
+        )
         val context = AccessibilitySurfaceContext(
             packageName = packageName,
             className = event.className?.toString(),
@@ -35,6 +52,7 @@ class AccessibilityDetectionService : AccessibilityService() {
         )
         val container = (application as? FocusGuardApp)?.container ?: return
         val match = container.surfaceMatcher.match(context) ?: return
+        diagnostics.recordMatch("${match.appName} ${match.surfaceName} (${match.evidence.joinToString()})")
 
         scope.launch {
             val rules = container.boundaryRepository.rules.first()
@@ -84,6 +102,10 @@ class AccessibilityDetectionService : AccessibilityService() {
                 decision = decision::class.simpleName ?: "Intervention",
                 reason = reason
             )
+            if (decision is InterventionDecision.Block) {
+                performGlobalAction(GLOBAL_ACTION_BACK)
+                SystemClock.sleep(250)
+            }
             launchMomentOfChoice(match.appName, match.packageName, match.surfaceId, match.surfaceName, boundaryId, decision, reason)
         }
     }
@@ -122,7 +144,7 @@ class AccessibilityDetectionService : AccessibilityService() {
         startActivity(intent)
     }
 
-    private fun AccessibilityNodeInfo.collectText(maxNodes: Int = 80): List<String> {
+    private fun AccessibilityNodeInfo.collectText(maxNodes: Int = 180): List<String> {
         val output = mutableListOf<String>()
         fun walk(node: AccessibilityNodeInfo?) {
             if (node == null || output.size >= maxNodes) return
@@ -134,7 +156,7 @@ class AccessibilityDetectionService : AccessibilityService() {
         return output
     }
 
-    private fun AccessibilityNodeInfo.collectViewIds(maxNodes: Int = 80): List<String> {
+    private fun AccessibilityNodeInfo.collectViewIds(maxNodes: Int = 180): List<String> {
         val output = mutableListOf<String>()
         fun walk(node: AccessibilityNodeInfo?) {
             if (node == null || output.size >= maxNodes) return

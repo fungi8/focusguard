@@ -4,6 +4,7 @@ import com.focusguard.data.db.FocusGuardDao
 import com.focusguard.data.model.toDomain
 import com.focusguard.data.model.toEntity
 import com.focusguard.domain.boundaries.BoundaryRule
+import com.focusguard.domain.boundaries.SurfaceAction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
@@ -28,5 +29,13 @@ class BoundaryRepository(
 
     suspend fun setEnabled(ruleId: String, enabled: Boolean) {
         dao.setBoundaryEnabled(ruleId, enabled)
+    }
+
+    suspend fun setAppEnabled(appName: String, enabled: Boolean) {
+        dao.setAppEnabled(appName, enabled)
+    }
+
+    suspend fun setAction(ruleId: String, action: SurfaceAction) {
+        dao.setBoundaryAction(ruleId, action.name)
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +22,8 @@ import com.focusguard.domain.boundaries.BoundaryRule
 @Composable
 fun BoundariesScreen(
     rules: List<BoundaryRule>,
-    onOpenDetail: () -> Unit,
+    onOpenDetail: (String) -> Unit,
+    onSetAppEnabled: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     ScreenShell(
@@ -41,12 +43,18 @@ fun BoundariesScreen(
                     horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
                 ) {
                     Text(app, fontWeight = FontWeight.Bold)
-                    Switch(checked = appRules.any { it.enabled }, onCheckedChange = {})
+                    Switch(
+                        checked = appRules.any { it.enabled },
+                        onCheckedChange = { onSetAppEnabled(app, it) }
+                    )
                 }
                 Text("${appRules.size} surfaces configured", color = Muted)
                 LabelRow("Hard boundaries", appRules.count { it.action.name == "BLOCK" }.toString())
+                Button(onClick = { onOpenDetail(app) }) {
+                    Text("Configure")
+                }
             }
         }
-        PrimaryAction("Open YouTube boundary", onOpenDetail)
+        PrimaryAction("Configure YouTube", onClick = { onOpenDetail("YouTube") })
     }
 }
