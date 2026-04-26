@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FocusGuard Prototype v3 — Local-first Architecture</title>
+  <style>
+    :root {
+      --bg: #F5F2EA;
+      --panel: #FCFBF8;
+      --card: rgba(252,251,248,0.88);
+      --text: #1B1B1B;
+      --muted: #6C6A63;
+      --line: #D8D2C7;
+      --accent: #496A5A;
+      --accent-2: #3F5B4D;
+      --accent-soft: #E5EEE8;
+      --dark: #1B1B1B;
+      --shadow: 0 14px 35px rgba(0,0,0,0.08);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --max: 1500px;
+      font-synthesis-weight: none;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { padding: 28px; }
+    h1,h2,h3,h4,p { margin: 0; }
+    .page { max-width: var(--max); margin: 0 auto; }
+    .topbar { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 28px; flex-wrap: wrap; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,0.7); border: 1px solid var(--line); color: var(--muted); }
+    .hero h1 { font-size: clamp(36px, 5vw, 58px); line-height: 1.02; letter-spacing: -0.03em; max-width: 760px; }
+    .hero p { margin-top: 12px; max-width: 760px; font-size: 17px; line-height: 1.7; color: var(--muted); }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn { border: 0; border-radius: 999px; padding: 12px 18px; font-size: 14px; font-weight: 600; cursor: pointer; transition: .2s ease; }
+    .btn.primary { background: var(--dark); color: #fff; box-shadow: var(--shadow); }
+    .btn.soft { background: rgba(255,255,255,0.76); color: var(--text); border: 1px solid var(--line); }
+    .layout { display: grid; grid-template-columns: 400px 1fr; gap: 24px; align-items: start; }
+    .sidebar, .content-card { background: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.35); backdrop-filter: blur(8px); border-radius: 28px; padding: 22px; box-shadow: var(--shadow); }
+    .section-title { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+    .section-sub { margin-top: 8px; font-size: 14px; line-height: 1.7; color: var(--muted); }
+    .screen-list { display: grid; gap: 10px; margin-top: 18px; }
+    .screen-tab { border: 1px solid var(--line); background: rgba(255,255,255,0.65); border-radius: 18px; padding: 14px 16px; text-align: left; cursor: pointer; transition: .18s ease; }
+    .screen-tab.active { background: var(--dark); color: #fff; border-color: var(--dark); transform: translateY(-1px); }
+    .screen-tab small { display: block; margin-top: 4px; opacity: .8; font-size: 12px; }
+    .info-grid { display: grid; gap: 12px; margin-top: 18px; }
+    .mini-card { background: rgba(255,255,255,0.72); border: 1px solid var(--line); border-radius: 18px; padding: 14px; }
+    .mini-card h4 { font-size: 14px; margin-bottom: 8px; }
+    .mini-card p { font-size: 13px; line-height: 1.7; color: var(--muted); }
+    .canvas { display: grid; gap: 20px; }
+    .content-card .head { display: flex; justify-content: space-between; gap: 18px; align-items: start; flex-wrap: wrap; margin-bottom: 18px; }
+    .content-card .head p { color: var(--muted); font-size: 14px; line-height: 1.7; max-width: 740px; margin-top: 8px; }
+    .meta-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pill { border-radius: 999px; padding: 8px 12px; font-size: 12px; border: 1px solid var(--line); background: rgba(255,255,255,0.75); color: var(--muted); }
+    .phone-and-notes { display: grid; grid-template-columns: 370px 1fr; gap: 20px; align-items: start; }
+    .phone-wrap { display: flex; justify-content: center; }
+    .phone { width: 340px; height: 720px; background: var(--panel); border: 10px solid #111; border-radius: 42px; box-shadow: 0 28px 60px rgba(0,0,0,0.18); overflow: hidden; position: relative; }
+    .phone::before { content: ""; position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 108px; height: 24px; border-radius: 999px; background: #111; z-index: 4; }
+    .screen { position: absolute; inset: 0; padding: 42px 22px 22px; overflow: auto; display: none; }
+    .screen.active { display: block; }
+    .app-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .badge-icon, .ghost-icon { width: 40px; height: 40px; border-radius: 16px; display: grid; place-items: center; }
+    .badge-icon { background: #151515; color: white; }
+    .ghost-icon { background: rgba(255,255,255,0.7); border: 1px solid var(--line); color: var(--muted); }
+    .title { font-size: 31px; line-height: 1.04; font-weight: 700; letter-spacing: -0.03em; }
+    .subtitle { margin-top: 9px; color: var(--muted); font-size: 14px; line-height: 1.75; }
+    .stack { display: grid; gap: 12px; margin-top: 18px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.03); }
+    .hero-card { background: #171717; color: white; padding: 18px; border-radius: 28px; }
+    .hero-card p { color: rgba(255,255,255,0.78); font-size: 14px; line-height: 1.7; }
+    .big-number { font-size: 52px; font-weight: 700; letter-spacing: -0.04em; margin: 10px 0 2px; }
+    .muted { color: var(--muted); }
+    .small { font-size: 12px; line-height: 1.6; }
+    .row { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+    .col2, .col3 { display: grid; gap: 12px; }
+    .col2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .col3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .metric { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .mini-number { font-size: 22px; font-weight: 700; margin-top: 10px; }
+    .list-item { display: flex; justify-content: space-between; gap: 12px; align-items: start; padding: 14px; border-radius: 20px; border: 1px solid var(--line); background: rgba(255,255,255,0.6); }
+    .list-item h4 { font-size: 15px; }
+    .list-item p { margin-top: 4px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .toggle { width: 46px; height: 26px; border-radius: 999px; padding: 3px; background: #161616; flex: 0 0 auto; }
+    .toggle.off { background: #D8D2C7; }
+    .toggle .knob { width: 20px; height: 20px; border-radius: 50%; background: white; transform: translateX(20px); }
+    .toggle.off .knob { transform: translateX(0); }
+    .segmented { display: flex; gap: 8px; flex-wrap: wrap; }
+    .segmented span { padding: 8px 12px; border-radius: 999px; font-size: 12px; background: rgba(255,255,255,0.72); border: 1px solid var(--line); color: var(--muted); }
+    .segmented span.active { background: var(--dark); color: #fff; border-color: var(--dark); }
+    .surface-item { border: 1px solid var(--line); border-radius: 18px; padding: 14px; background: rgba(255,255,255,0.65); }
+    .surface-item .surface-tag { padding: 6px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--accent-soft); color: var(--accent); }
+    .divider { height: 1px; background: var(--line); margin: 14px 0; }
+    .cta-full { width: 100%; border: 0; border-radius: 999px; background: var(--dark); color: white; padding: 14px 16px; font-weight: 700; cursor: pointer; }
+    .cta-secondary { width: 100%; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.75); color: var(--text); padding: 14px 16px; font-weight: 700; cursor: pointer; }
+    .option { border: 1px solid var(--line); border-radius: 18px; padding: 14px; background: rgba(255,255,255,0.68); cursor: pointer; transition: .18s ease; }
+    .option.active { border-color: var(--accent); background: var(--accent-soft); }
+    .notes { display: grid; gap: 14px; }
+    .note-card { background: rgba(255,255,255,0.72); border: 1px solid var(--line); border-radius: 22px; padding: 18px; }
+    .note-card h3 { font-size: 16px; margin-bottom: 8px; }
+    .note-card p, .note-card li { font-size: 14px; color: var(--muted); line-height: 1.75; }
+    .note-card ul { margin: 0; padding-left: 18px; }
+    .flow-grid { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 10px; }
+    .flow-step { border: 1px solid var(--line); background: rgba(255,255,255,0.72); border-radius: 18px; padding: 14px; min-height: 110px; }
+    .flow-step strong { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--accent-2); }
+    .flow-step h4 { font-size: 15px; margin-top: 8px; margin-bottom: 6px; }
+    .flow-step p { font-size: 13px; line-height: 1.6; color: var(--muted); }
+    .bars { display: flex; align-items: end; gap: 8px; height: 120px; margin-top: 16px; }
+    .bar { flex: 1; background: #171717; border-radius: 12px 12px 0 0; position: relative; }
+    .bar span { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--muted); }
+    .timeline { display: grid; gap: 10px; }
+    .event { display: flex; gap: 12px; align-items: start; padding: 12px; border-radius: 18px; background: rgba(255,255,255,0.68); border: 1px solid var(--line); }
+    .event .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent-2); margin-top: 7px; flex: 0 0 auto; }
+    .phone-footer { position: sticky; bottom: 0; margin-top: 14px; padding-top: 12px; background: linear-gradient(to top, rgba(247,244,238,0.96), rgba(247,244,238,0)); }
+    .nav { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; background: rgba(255,255,255,0.8); border: 1px solid var(--line); border-radius: 22px; padding: 10px; }
+    .nav div { text-align: center; font-size: 11px; color: var(--muted); padding: 8px 0; border-radius: 14px; }
+    .nav div.active { background: #161616; color: #fff; }
+    .legend { display: flex; gap: 8px; flex-wrap: wrap; }
+    .legend span { background: rgba(255,255,255,0.68); border: 1px solid var(--line); border-radius: 999px; padding: 8px 10px; font-size: 12px; color: var(--muted); }
+    @media (max-width: 1180px) {
+      .layout { grid-template-columns: 1fr; }
+      .phone-and-notes { grid-template-columns: 1fr; }
+      .flow-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width: 700px) {
+      body { padding: 16px; }
+      .phone { width: 100%; max-width: 340px; }
+      .col3 { grid-template-columns: 1fr; }
+      .col2 { grid-template-columns: 1fr; }
+      .flow-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="hero">
+        <div class="eyebrow">FocusGuard Prototype v2 · Philosophical theme</div>
+        <h1>Philosophical prototype + full interaction logic for Codex.</h1>
+        <p>This prototype uses a Bone White + Charcoal + Deep Sage theme to show the product philosophy, screen structure, and key flows for FocusGuard — an open-source attention firewall for reclaiming agency in the age of infinite feeds.</p>
+      </div>
+      <div class="actions">
+        <button class="btn primary" onclick="showScreen('today')">Open prototype</button>
+        <button class="btn soft" onclick="showScreen('flow')">View interaction map</button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="section-title">Prototype navigation</div>
+        <div class="section-sub">These views show the whole product logic, not just isolated visuals. Codex should use them as implementation guidance.</div>
+        <div class="screen-list">
+          <button class="screen-tab active" data-target="onboarding" onclick="showScreen('onboarding', this)">Onboarding<small>philosophy, privacy, permissions</small></button>
+          <button class="screen-tab" data-target="today" onclick="showScreen('today', this)">Today<small>main dashboard and product voice</small></button>
+          <button class="screen-tab" data-target="boundaries" onclick="showScreen('boundaries', this)">Boundaries<small>surface-level rules, not app-level only</small></button>
+          <button class="screen-tab" data-target="detail" onclick="showScreen('detail', this)">Boundary Detail<small>surface config and actions</small></button>
+          <button class="screen-tab" data-target="moment" onclick="showScreen('moment', this)">Moment of Choice<small>intent gate + intervention flow</small></button>
+          <button class="screen-tab" data-target="shared" onclick="showScreen('shared', this)">Shared Boundaries<small>community rule packs</small></button>
+          <button class="screen-tab" data-target="mirror" onclick="showScreen('mirror', this)">Attention Mirror<small>reflective insights, not guilt analytics</small></button>
+          <button class="screen-tab" data-target="architecture" onclick="showScreen('architecture', this)">Technical Architecture<small>no backend, local-first, lowest cost</small></button>
+          <button class="screen-tab" data-target="settings" onclick="showScreen('settings', this)">Settings & Privacy<small>local-first trust layer</small></button>
+          <button class="screen-tab" data-target="flow" onclick="showScreen('flow', this)">Interaction Map<small>end-to-end product flows</small></button>
+        </div>
+
+        <div class="info-grid">
+          <div class="mini-card">
+            <h4>Core thesis</h4>
+            <p>Modern apps removed stopping cues. FocusGuard puts them back.</p>
+          </div>
+          <div class="mini-card">
+            <h4>Main differentiator</h4>
+            <p>Block addictive surfaces like Shorts, Reels, Popular, and For You — without blocking the useful parts of apps.</p>
+          </div>
+          <div class="mini-card">
+            <h4>Product language</h4>
+            <p>Boundaries, Moment of Choice, Shared Boundaries, Attention Mirror, Chosen Windows.</p>
+          </div>
+          <div class="mini-card">
+            <h4>Technical constraint</h4>
+            <p>v1 should be Android-only, local-first, no backend, no account, bundled JSON rule packs, GitHub Releases + F-Droid.</p>
+          </div>
+        </div>
+      </aside>
+
+      <div class="canvas">
+        <section class="content-card">
+          <div class="head">
+            <div>
+              <div class="section-title" id="contentTitle">Onboarding</div>
+              <p id="contentSummary">Start by teaching the product philosophy. This is not “just a blocker.” It is an attention firewall that restores choice.</p>
+            </div>
+            <div class="meta-pills" id="contentMeta"></div>
+          </div>
+
+          <div class="phone-and-notes">
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="screen active" id="screen-onboarding">
+                  <div class="app-head">
+                    <div class="badge-icon">FG</div>
+                    <div class="ghost-icon">⋯</div>
+                  </div>
+                  <div class="title">Your attention firewall.</div>
+                  <div class="subtitle">FocusGuard helps you interrupt addictive feeds and restore stopping cues.</div>
+                  <div class="stack">
+                    <div class="card">
+                      <strong>Block addictive surfaces, not useful apps</strong>
+                      <p class="subtitle">Keep Search, DMs, and Subscriptions. Block Shorts, Reels, For You, and endless feed loops.</p>
+                    </div>
+                    <div class="card">
+                      <strong>No shame. No tracking. No ads.</strong>
+                      <p class="subtitle">Everything stays local by default. This is built for adults, not as parental control.</p>
+                    </div>
+                    <div class="card">
+                      <strong>A moment of choice</strong>
+                      <p class="subtitle">Before a high-risk feed opens, FocusGuard can ask what brought you here.</p>
+                    </div>
+                    <div class="card">
+                      <strong>Permissions explained clearly</strong>
+                      <p class="subtitle">Usage access and Accessibility are used only for minimal detection and intervention logic.</p>
+                    </div>
+                  </div>
+                  <div class="phone-footer">
+                    <button class="cta-full">Get started</button>
+                    <div style="height:10px"></div>
+                    <button class="cta-secondary">Read privacy first</button>
+                  </div>
+                </div>
+
+                <div class="screen" id="screen-today">
+                  <div class="app-head">
+                    <div class="badge-icon">FG</div>
+                    <div class="ghost-icon">⚙</div>
+                  </div>
+                  <div class="title">Today</div>
+                  <div class="subtitle">A quiet dashboard centered on moments of choice, not productivity guilt.</div>
+                  <div class="hero-card">
+                    <div class="small">Moments reclaimed today</div>
+                    <div class="big-number">7</div>
+                    <p>3 interventions ended with “leave with intention.” 2 turned into “better next step.”</p>
+                  </div>
+                  <div class="col3 stack" style="margin-top:12px;">
+                    <div class="card"><div class="small muted">Top trap</div><div class="mini-number">Shorts</div><div class="metric">12 interruptions</div></div>
+                    <div class="card"><div class="small muted">Protected</div><div class="mini-number">42m</div><div class="metric">attention reclaimed</div></div>
+                    <div class="card"><div class="small muted">Boundaries</div><div class="mini-number">5</div><div class="metric">currently active</div></div>
+                  </div>
+                  <div class="stack">
+                    <div class="list-item"><div><h4>YouTube</h4><p>Shorts blocked · Home feed warned · Search allowed</p></div><div class="small muted">Edit</div></div>
+                    <div class="list-item"><div><h4>Instagram</h4><p>Reels blocked · Explore warned · DM allowed</p></div><div class="small muted">Edit</div></div>
+                    <div class="list-item"><div><h4>Reddit</h4><p>Popular blocked · Joined communities allowed</p></div><div class="small muted">Edit</div></div>
+                  </div>
+                  <div class="phone-footer">
+                    <div class="nav">
+                      <div class="active">Today</div>
+                      <div>Boundaries</div>
+                      <div>Mirror</div>
+                      <div>Shared</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="screen" id="screen-boundaries">
+                  <div class="app-head">
+                    <div class="badge-icon">↺</div>
+                    <div class="ghost-icon">＋</div>
+                  </div>
+                  <div class="title">Boundaries</div>
+                  <div class="subtitle">Configure the parts of apps that pull you into autopilot.</div>
+                  <div class="segmented"><span class="active">Apps</span><span>Surfaces</span><span>Chosen Windows</span></div>
+                  <div class="stack">
+                    <div class="list-item">
+                      <div><h4>YouTube</h4><p>3 surfaces configured · Shorts blocked</p></div>
+                      <div class="toggle"><div class="knob"></div></div>
+                    </div>
+                    <div class="list-item">
+                      <div><h4>Instagram</h4><p>2 surfaces configured · Reels blocked</p></div>
+                      <div class="toggle"><div class="knob"></div></div>
+                    </div>
+                    <div class="list-item">
+                      <div><h4>Reddit</h4><p>Popular blocked · Joined communities allowed</p></div>
+                      <div class="toggle"><div class="knob"></div></div>
+                    </div>
+                    <div class="list-item">
+                      <div><h4>X</h4><p>For You blocked · Search and DMs allowed</p></div>
+                      <div class="toggle off"><div class="knob"></div></div>
+                    </div>
+                  </div>
+                  <div class="phone-footer">
+                    <button class="cta-full">Add boundary</button>
+                  </div>
+                </div>
+
+                <div class="screen" id="screen-detail">
+                  <div class="app-head">
+                    <div class="badge-icon">YT</div>
+                    <div class="ghost-icon">⋯</div>
+                  </div>
+                  <div class="title">YouTube boundary</div>
+                  <div class="subtitle">Configure surfaces separately. This is the product’s main differentiator.</div>
+                  <div class="stack">
+                    <div class="surface-item">
+                      <div class="row"><strong>Shorts</strong><span class="surface-tag">Block</span></div>
+                      <div class="subtitle">Hard stop with conscious override</div>
+                    </div>
+                    <div class="surface-item">
+                      <div class="row"><strong>Home feed</strong><span class="surface-tag">Warn</span></div>
+                      <div class="subtitle">Session reminder after 5 minutes</div>
+                    </div>
+                    <div class="surface-item">
+                      <div class="row"><strong>Subscriptions</strong><span class="surface-tag" style="background:#F3F0E8;color:#555;">Allow</span></div>
+                      <div class="subtitle">Useful path stays open</div>
+                    </div>
+                    <div class="surface-item">
+                      <div class="row"><strong>Search</strong><span class="surface-tag" style="background:#F3F0E8;color:#555;">Allow</span></div>
+                      <div class="subtitle">Intentional use stays open</div>
+                    </div>
+                    <div class="card">
+                      <div class="row"><strong>Override mode</strong><span class="muted small">Type phrase</span></div>
+                      <div class="divider"></div>
+                      <div class="row"><strong>Session reminder</strong><span class="muted small">5 min</span></div>
+                      <div class="divider"></div>
+                      <div class="row"><strong>Reset window</strong><span class="muted small">30 min</span></div>
+                    </div>
+                  </div>
+                  <div class="phone-footer">
+                    <button class="cta-full">Save boundary</button>
+                  </div>
+                </div>
+
+                <div class="screen" id="screen-moment">
+                  <div class="app-head">
+                    <div class="badge-icon">⏸</div>
+                    <div class="ghost-icon">·</div>
+                  </div>
+                  <div class="title">A moment of choice</div>
+                  <div class="subtitle">This is the intervention layer. It should feel humane, not punitive.</div>
+                  <div class="card" style="text-align:center; padding:18px;">
+                    <strong>What brought you here?</strong>
+                    <p class="subtitle" style="margin-top:8px;">You opened YouTube Shorts. Before continuing, choose intentionally.</p>
+                  </div>
+                  <div class="stack">
+                    <div class="option">I came to search for something</div>
+                    <div class="option">I came to message someone</div>
+                    <div class="option">I came to post something</div>
+                    <div class="option">I came to check one thing</div>
+                    <div class="option active">I came here without thinking</div>
+                  </div>
+                  <div class="card">
+                    <strong>That happens.</strong>
+                    <p class="subtitle">Take 10 seconds. If you still want this, continue deliberately.</p>
+                  </div>
+                  <div class="phone-footer">
+                    <button class="cta-full">Continue with intention</button>
+                    <div style="height:10px"></div>
+                    <button class="cta-secondary">Leave for now</button>
+                    <div style="height:10px"></div>
+                    <button class="cta-secondary">Open a better next step</button>
+                  </div>
+                </div>
+
+                <div class="screen" id="screen-shared">
+                  <div class="app-head">
+                    <div class="badge-icon">◎</div>
+                    <div class="ghost-icon">⇅</div>
+                  </div>
+                  <div class="title">Shared Boundaries</div>
+                  <div class="subtitle">Community-maintained packs, like humane AdBlock lists for attention traps.</div>
+                  <div class="stack">
+                    <div class="card"><div class="row"><strong>Essential</strong><span class="small muted">Popular</span></div><p class="subtitle">Blocks the most common attention traps across Shorts, Reels, and infinite feeds.</p></div>
+                    <div class="card"><div class="row"><strong>No Shorts</strong><span class="small muted">Most installed</span></div><p class="subtitle">Blocks YouTube Shorts and short-form feed surfaces while keeping Search and Subscriptions open.</p></div>
+                    <div class="card"><div class="row"><strong>Reddit Minimal</strong><span class="small muted">Community</span></div><p class="subtitle">Blocks Popular and All. Keeps your communities, saved posts, and search.</p></div>
+                    <div class="card"><div class="row"><strong>Creator Mode</strong><span class="small muted">Experimental</span></div><p class="subtitle">Allows posting, DMs, and analytics while blocking consumption-heavy surfaces.</p></div>
+                  </div>
+                  <div class="phone-footer">
+                    <button class="cta-full">Preview selected pack</button>
+                  </div>
+                </div>
+
+                <div class="screen" id="screen-mirror">
+                  <div class="app-head">
+                    <div class="badge-icon">◔</div>
+                    <div class="ghost-icon">↗</div>
+                  </div>
+                  <div class="title">Attention Mirror</div>
+                  <div class="subtitle">Reflective signals, not shame-driven analytics.</div>
+                  <div class="hero-card">
+                    <div class="small">This week</div>
+                    <div class="big-number">27</div>
+                    <p>moments of choice reclaimed</p>
+                    <div class="bars">
+                      <div class="bar" style="height:48px"><span>M</span></div>
+                      <div class="bar" style="height:72px"><span>T</span></div>
+                      <div class="bar" style="height:44px"><span>W</span></div>
+                      <div class="bar" style="height:94px"><span>T</span></div>
+                      <div class="bar" style="height:82px"><span>F</span></div>
+                      <div class="bar" style="height:110px"><span>S</span></div>
+                      <div class="bar" style="height:88px"><span>S</span></div>
+                    </div>
+                  </div>
+                  <div class="stack">
+                    <div class="card"><strong>Patterns</strong><p class="subtitle">Most autopilot openings happened after 10 PM and mostly on YouTube Shorts.</p></div>
+                    <div class="timeline">
+                      <div class="event"><div class="dot"></div><div><strong>8:42 AM · TikTok</strong><p class="small muted">Selected “habit” · chose to leave</p></div></div>
+                      <div class="event"><div class="dot"></div><div><strong>12:10 PM · YouTube Shorts</strong><p class="small muted">Continued after reflection</p></div></div>
+                      <div class="event"><div class="dot"></div><div><strong>9:30 PM · Reddit Popular</strong><p class="small muted">Opened Kindle as better next step</p></div></div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="screen" id="screen-architecture">
+                  <div class="app-head">
+                    <div class="badge-icon">⌘</div>
+                    <div class="ghost-icon">0$</div>
+                  </div>
+                  <div class="title">Technical Architecture</div>
+                  <div class="subtitle">The v1 implementation should stay offline-first and avoid backend infrastructure.</div>
+                  <div class="stack">
+                    <div class="hero-card">
+                      <div class="small">v1 architecture</div>
+                      <div style="font-size:28px;font-weight:700;letter-spacing:-.03em;margin:10px 0;">Android local-first</div>
+                      <p>Kotlin + Jetpack Compose + Room + DataStore + bundled JSON rule packs. No server required.</p>
+                    </div>
+                    <div class="card">
+                      <strong>App layer</strong>
+                      <p class="subtitle">Compose screens for Today, Boundaries, Moment of Choice, Attention Mirror, Shared Boundaries, and Settings.</p>
+                    </div>
+                    <div class="card">
+                      <strong>Domain layer</strong>
+                      <p class="subtitle">BoundaryEngine, SurfaceMatcher, InterventionDecision, ChosenWindowChecker, ResetWindowManager, OverridePolicy.</p>
+                    </div>
+                    <div class="card">
+                      <strong>Data layer</strong>
+                      <p class="subtitle">Room for boundaries and events. DataStore for preferences. Local JSON rule packs in assets.</p>
+                    </div>
+                    <div class="card">
+                      <strong>System layer</strong>
+                      <p class="subtitle">UsageStatsManager for app-level usage. AccessibilityService only where necessary for surface detection and interventions.</p>
+                    </div>
+                    <div class="card">
+                      <strong>Distribution</strong>
+                      <p class="subtitle">GitHub Releases APK first. F-Droid next. Google Play later after policy review.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="screen" id="screen-settings">
+                  <div class="app-head">
+                    <div class="badge-icon">⚙</div>
+                    <div class="ghost-icon">?</div>
+                  </div>
+                  <div class="title">Settings & privacy</div>
+                  <div class="subtitle">Trust is product-critical. Local-first and transparent by design.</div>
+                  <div class="stack">
+                    <div class="card"><strong>Local-first by default</strong><p class="subtitle">Rules, moments, and reflection data stay on-device unless the user explicitly exports them.</p></div>
+                    <div class="card"><strong>No account required</strong><p class="subtitle">No ads, no cloud requirement, no selling data, no default analytics.</p></div>
+                    <div class="card"><strong>Accessibility disclosure</strong><p class="subtitle">Used only for minimal interaction detection and intervention logic. No message reading. No keystroke capture. No accessibility data upload.</p></div>
+                    <div class="card"><strong>Chosen Windows</strong><p class="subtitle">Lunch window · Evening unwind · Temporary conscious override settings.</p></div>
+                  </div>
+                </div>
+
+                <div class="screen" id="screen-flow">
+                  <div class="app-head">
+                    <div class="badge-icon">⇄</div>
+                    <div class="ghost-icon">◎</div>
+                  </div>
+                  <div class="title">Interaction map</div>
+                  <div class="subtitle">The full product logic should be understandable from this screen.</div>
+                  <div class="stack">
+                    <div class="card"><strong>Flow A</strong><p class="subtitle">Onboarding → permissions → install Shared Boundary pack → land on Today.</p></div>
+                    <div class="card"><strong>Flow B</strong><p class="subtitle">Boundaries → choose app → choose surface → set action → save.</p></div>
+                    <div class="card"><strong>Flow C</strong><p class="subtitle">Open high-risk surface → Moment of Choice → continue intentionally or leave → log event to Attention Mirror.</p></div>
+                    <div class="card"><strong>Flow D</strong><p class="subtitle">Shared Boundaries → preview pack → install → adjust details.</p></div>
+                    <div class="card"><strong>Architecture</strong><p class="subtitle">No backend: bundled JSON packs, local DB, local event log, GitHub/F-Droid distribution.</p></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="notes">
+              <div class="note-card" id="notes-main">
+                <h3>Why this screen exists</h3>
+                <p>This screen notes area is meant to help Codex translate the prototype into implementation. It explains the screen’s role, the core interactions, and what should be preserved in the final app.</p>
+              </div>
+              <div class="note-card" id="notes-details">
+                <h3>Implementation guidance</h3>
+                <ul>
+                  <li>Use the product vocabulary consistently.</li>
+                  <li>Keep the UI calm and minimal.</li>
+                  <li>Preserve the philosophical identity.</li>
+                </ul>
+              </div>
+              <div class="note-card" id="notes-flows">
+                <h3>Related flows</h3>
+                <p>Flow notes will appear here when you switch screens.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-card" id="flowPanel">
+          <div class="head">
+            <div>
+              <div class="section-title">End-to-end interaction logic</div>
+              <p>This map gives Codex a high-level understanding of how the product hangs together. The final app and Android implementation should reflect this architecture.</p>
+            </div>
+            <div class="legend">
+              <span>Philosophy layer</span>
+              <span>Boundary layer</span>
+              <span>Intervention layer</span>
+              <span>Reflection layer</span>
+              <span>Community layer</span>
+            </div>
+          </div>
+          <div class="flow-grid">
+            <div class="flow-step">
+              <strong>Step 1</strong>
+              <h4>Onboard</h4>
+              <p>Teach the thesis, explain privacy, explain permissions, and frame FocusGuard as a humane tool rather than a control system.</p>
+            </div>
+            <div class="flow-step">
+              <strong>Step 2</strong>
+              <h4>Choose boundaries</h4>
+              <p>Create app-level and surface-level boundaries. Install a Shared Boundary pack or set up manually.</p>
+            </div>
+            <div class="flow-step">
+              <strong>Step 3</strong>
+              <h4>Detect high-risk surface</h4>
+              <p>Use Android monitoring + accessibility heuristics to detect the app and, where possible, the specific feed surface.</p>
+            </div>
+            <div class="flow-step">
+              <strong>Step 4</strong>
+              <h4>Moment of Choice</h4>
+              <p>Trigger warn / block / intent gate. Add humane friction and conscious override instead of shame.</p>
+            </div>
+            <div class="flow-step">
+              <strong>Step 5</strong>
+              <h4>Reflect</h4>
+              <p>Log the event locally, show patterns in Attention Mirror, and let the user refine boundaries over time.</p>
+            </div>
+            <div class="flow-step">
+              <strong>Cost model</strong>
+              <h4>No backend</h4>
+              <p>Bundle JSON packs, store data locally, publish APK through GitHub, target F-Droid, and delay Google Play until policy review.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const screenData = {
+      onboarding: {
+        title: 'Onboarding',
+        summary: 'Teach the product philosophy first: this is an attention firewall that restores the moment of choice. Clarify privacy and permissions early.',
+        meta: ['Philosophy', 'Privacy', 'Permissions'],
+        notesMain: 'The onboarding sets the emotional and philosophical tone. It should explain that FocusGuard is not about shame or total abstinence. It is about restoring agency in the age of infinite feeds.',
+        notesDetails: [
+          'Include a premium, calm, bone-white and deep-sage visual style.',
+          'Explain local-first privacy in plain language.',
+          'Explain Accessibility and Usage Access clearly.',
+          'Make “block addictive surfaces, not useful apps” a central message.'
+        ],
+        notesFlows: 'Related flow: First-time user → onboarding → permissions → starter setup → Today.'
+      },
+      today: {
+        title: 'Today',
+        summary: 'This is the emotional home screen. It should foreground moments reclaimed, not guilt metrics. It also shows a quick summary of active boundaries.',
+        meta: ['Dashboard', 'Product voice', 'Quick edits'],
+        notesMain: 'Today is where the user lands after setup and where they return for reassurance. It should feel calm, clear, and rewarding without being gamified.',
+        notesDetails: [
+          'Show “moments reclaimed” as the primary metric.',
+          'Keep active boundary summaries visible.',
+          'Allow one-tap editing into Boundaries.',
+          'Use humane copy instead of competitive language.'
+        ],
+        notesFlows: 'Related flows: landing state after onboarding, daily check-in, quick path into boundary editing.'
+      },
+      boundaries: {
+        title: 'Boundaries',
+        summary: 'The main control surface. This screen defines what the product really is: a system for configuring digital boundaries around addictive surfaces.',
+        meta: ['Core control', 'App surfaces', 'Chosen windows'],
+        notesMain: 'This should not feel like a generic settings page. It is the product’s conceptual center, because it lets users define what parts of apps should be blocked, warned, or allowed.',
+        notesDetails: [
+          'Support app-level and surface-level logic.',
+          'Show that useful app areas remain open.',
+          'Make add/edit flows simple and legible.',
+          'Expose Chosen Windows and override modes cleanly.'
+        ],
+        notesFlows: 'Related flow: Boundaries → add or select app → surface configuration → save.'
+      },
+      detail: {
+        title: 'Boundary Detail',
+        summary: 'This view demonstrates the main differentiator: separate control over different surfaces of one app.',
+        meta: ['Surface-level control', 'Override mode', 'Limits'],
+        notesMain: 'Codex should use this as the implementation guide for the boundary detail view. It shows that one app can have multiple surface actions with separate semantics.',
+        notesDetails: [
+          'Surfaces should support ALLOW / WARN / INTENT_GATE / BLOCK.',
+          'Expose session reminder, reset window, and override mode.',
+          'Make future expansion easy for more surfaces and heuristics.',
+          'Document which surfaces are experimental.'
+        ],
+        notesFlows: 'Related flow: Boundaries → select app → edit surface actions → save → return to Today.'
+      },
+      moment: {
+        title: 'Moment of Choice',
+        summary: 'The intervention layer should be humane and reflective. It asks what brought the user here and makes intention visible.',
+        meta: ['Intervention', 'Intent Gate', 'Conscious override'],
+        notesMain: 'This is a core differentiator. The intervention flow should avoid shame, fear, or harsh red alerts. It should instead create a calm pause between impulse and action.',
+        notesDetails: [
+          'Support intent prompt options.',
+          'Support “I came here without thinking.”',
+          'Support continue, leave, or better next step.',
+          'Support override friction such as wait 10 seconds or type phrase.'
+        ],
+        notesFlows: 'Related flow: user opens high-risk surface → Moment of Choice → continue intentionally or leave → event logged.'
+      },
+      shared: {
+        title: 'Shared Boundaries',
+        summary: 'This is the open-source and community layer. Community-maintained packs make the project more than a simple blocker.',
+        meta: ['Community', 'Rule packs', 'Open-source leverage'],
+        notesMain: 'This screen helps explain why FocusGuard can become a notable open-source project. Shared Boundary packs are similar in spirit to AdBlock lists, but for attention traps.',
+        notesDetails: [
+          'Show curated packs with short explanations.',
+          'Preview the impact of each pack before install.',
+          'Design the architecture so rule packs can live in Git-based JSON or local bundles.',
+          'Use this screen to communicate community participation.'
+        ],
+        notesFlows: 'Related flow: Shared Boundaries → preview pack → install → customize in Boundaries.'
+      },
+      mirror: {
+        title: 'Attention Mirror',
+        summary: 'This is a reflective insights screen. It should help users understand patterns without turning into a guilt dashboard.',
+        meta: ['Reflection', 'Local logs', 'Pattern insight'],
+        notesMain: 'This screen should help users see their own patterns. The emotional tone should be gentle and reflective, not corrective or score-driven.',
+        notesDetails: [
+          'Prioritize patterns over raw totals.',
+          'Use local-only logs and optional reasons.',
+          'Show reclaimed moments and top interrupted surfaces.',
+          'Avoid streaks, points, and gamification.'
+        ],
+        notesFlows: 'Related flow: event logged after intervention → user visits Attention Mirror → adjusts boundaries over time.'
+      },
+
+      architecture: {
+        title: 'Technical Architecture',
+        summary: 'This screen tells Codex exactly how to keep the project simple: Android-first, local-first, no backend, no account, and no cloud dependency in v1.',
+        meta: ['No backend', 'Kotlin', 'Room', 'DataStore', 'F-Droid'],
+        notesMain: 'The technical architecture is intentionally constrained. The product philosophy depends on trust, privacy, and low operational cost, so v1 should avoid servers, accounts, analytics, subscriptions, Firebase, Supabase, and cloud sync.',
+        notesDetails: [
+          'Use Kotlin + Jetpack Compose + Material 3.',
+          'Use Room for structured local data and DataStore for lightweight preferences.',
+          'Use bundled JSON assets for Shared Boundary packs in v1.',
+          'Route all policy decisions through BoundaryEngine.',
+          'Use UsageStatsManager and AccessibilityService carefully and transparently.',
+          'Release first through GitHub APK, then F-Droid, then Google Play later.'
+        ],
+        notesFlows: 'Related technical flow: SurfaceContext → SurfaceMatcher → BoundaryEngine → InterventionDecision → Moment of Choice UI → local Attention Mirror event log.'
+      },
+      settings: {
+        title: 'Settings & Privacy',
+        summary: 'Trust is central. This screen should clearly explain local-first behavior, permissions, disclosures, and user control.',
+        meta: ['Trust layer', 'Local-first', 'Disclosures'],
+        notesMain: 'Codex should treat this as product-critical, not secondary. The privacy posture is one of the strongest differentiators for an open-source audience.',
+        notesDetails: [
+          'Make data handling transparent.',
+          'Explain why permissions are needed and their limits.',
+          'Allow easy data export and deletion in the future.',
+          'Keep the wording precise and calm.'
+        ],
+        notesFlows: 'Related flow: onboarding disclosure, ongoing trust maintenance, user-controlled settings changes.'
+      },
+      flow: {
+        title: 'Interaction Map',
+        summary: 'This view summarizes the whole product logic and should be used by Codex as a high-level architecture guide.',
+        meta: ['Flow logic', 'Architecture', 'Design system'],
+        notesMain: 'This map explains how the philosophy layer, boundary layer, intervention layer, reflection layer, and community layer work together.',
+        notesDetails: [
+          'Ensure the Android implementation maps clearly to these flows.',
+          'Preserve vocabulary and product philosophy throughout.',
+          'Keep the HTML prototype and Compose implementation aligned.',
+          'Use this map when organizing docs and architecture notes.'
+        ],
+        notesFlows: 'Flow A: onboarding. Flow B: configure boundaries. Flow C: detect high-risk surface. Flow D: intervene. Flow E: reflect and iterate.'
+      }
+    };
+
+    function showScreen(key, el) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById('screen-' + key);
+      if (target) target.classList.add('active');
+
+      document.querySelectorAll('.screen-tab').forEach(tab => tab.classList.remove('active'));
+      const tab = el || document.querySelector(`.screen-tab[data-target="${key}"]`);
+      if (tab) tab.classList.add('active');
+
+      const data = screenData[key];
+      if (!data) return;
+
+      document.getElementById('contentTitle').textContent = data.title;
+      document.getElementById('contentSummary').textContent = data.summary;
+      document.getElementById('notes-main').innerHTML = `<h3>Why this screen exists</h3><p>${data.notesMain}</p>`;
+      document.getElementById('notes-details').innerHTML = `<h3>Implementation guidance</h3><ul>${data.notesDetails.map(item => `<li>${item}</li>`).join('')}</ul>`;
+      document.getElementById('notes-flows').innerHTML = `<h3>Related flows</h3><p>${data.notesFlows}</p>`;
+      document.getElementById('contentMeta').innerHTML = data.meta.map(item => `<span class="pill">${item}</span>`).join('');
+    }
+
+    showScreen('onboarding');
+  </script>
+</body>
+</html>

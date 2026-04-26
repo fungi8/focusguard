@@ -1,0 +1,40 @@
+{
+  "id": "reddit-minimal",
+  "name": "Reddit Minimal",
+  "description": "Blocks Popular and All. Keeps joined communities, saved posts, and search available.",
+  "apps": [
+    {
+      "app": "Reddit",
+      "package": "com.reddit.frontpage",
+      "surfaces": [
+        {
+          "id": "popular",
+          "name": "Popular",
+          "action": "block",
+          "cooldown_minutes": 30,
+          "override_mode": "wait_10_seconds",
+          "enabled": true
+        },
+        {
+          "id": "all",
+          "name": "All",
+          "action": "warn",
+          "session_limit_minutes": 5,
+          "enabled": true
+        },
+        {
+          "id": "joined",
+          "name": "Joined communities",
+          "action": "allow",
+          "enabled": true
+        },
+        {
+          "id": "search",
+          "name": "Search",
+          "action": "allow",
+          "enabled": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1324 @@
+# FocusGuard Codex Master Prompt
+
+> Copy this entire document into Codex.
+>
+> Goal: Build and launch an open-source Android app for the US / English-speaking market.
+>
+> Product concept: **An open-source attention firewall for TikTok, Reels, Shorts, Reddit, X, and other infinite feeds.**
+>
+> Core narrative: **Modern apps removed stopping cues. FocusGuard puts them back.**
+
+---
+
+## 0. Your Role
+
+You are my:
+
+- Full-stack Android engineer
+- Product designer
+- Open-source maintainer
+- Growth strategist
+- Community operator
+- Technical writer
+- Launch planner
+
+You are responsible for helping me build not only the app, but also the open-source project, README, launch content, and community strategy.
+
+This project should be built for the **United States and English-speaking markets first**.
+
+Do **not** focus on China-specific apps or Chinese platforms.
+
+Do **not** create content for Douyin, Kuaishou, WeChat Channels, Xiaohongshu, Zhihu, Juejin, or V2EX.
+
+Focus on:
+
+- TikTok
+- Instagram Reels
+- YouTube Shorts
+- Snapchat Spotlight
+- Facebook Reels
+- X / Twitter infinite feed
+- Reddit infinite feed
+- Any user-defined app or website
+
+The app should feel like:
+
+> Like AdBlock, but for addictive feeds.
+
+---
+
+## 1. Product Name
+
+Working name:
+
+# FocusGuard
+
+Tagline:
+
+> An open-source attention firewall for short videos and infinite feeds.
+
+Alternative tagline:
+
+> Like AdBlock, but for addictive apps.
+
+Please also suggest 10 alternative names suitable for an English-speaking open-source project.
+
+Name style:
+
+- Simple
+- Memorable
+- Not too medical
+- Not too preachy
+- Developer-friendly
+- Suitable for GitHub
+- Suitable for Product Hunt
+- Suitable for Reddit and Hacker News
+
+Possible naming directions:
+
+- FocusGuard
+- ScrollBlock
+- FeedFence
+- Attention Firewall
+- Doomscroll Shield
+- Dopamine Guard
+- Reclaim
+- PauseKit
+- ScrollFence
+- CueBlock
+
+---
+
+## 2. Product Positioning
+
+This is not a productivity app.
+
+This is not a habit tracker.
+
+This is not a to-do app.
+
+This is not a parental control app.
+
+This is an:
+
+# Attention Firewall
+
+Core positioning:
+
+> FocusGuard helps people block addictive short videos, reels, shorts, and infinite feeds with rules they control.
+
+Key principles:
+
+- User-controlled
+- Local-first
+- Privacy-first
+- Open-source
+- No shame
+- No ads
+- No tracking
+- No cloud by default
+- Calm intervention instead of aggressive blocking
+- Designed for adults, not children
+
+---
+
+## 3. Core Problem
+
+Many people do not intentionally choose to spend 40 minutes on TikTok, Reels, Shorts, or Reddit.
+
+They open an app for 2 minutes and wake up 40 minutes later.
+
+The problem is not simply lack of discipline.
+
+The problem is that infinite feeds, short videos, and recommendation algorithms are designed to remove stopping cues.
+
+FocusGuard gives users a self-configured stopping cue.
+
+It should help the user pause, reflect, and choose intentionally.
+
+Main narrative:
+
+> Modern apps removed stopping cues. FocusGuard puts them back.
+
+---
+
+## 4. Target Market
+
+Primary market:
+
+- United States
+- Canada
+- United Kingdom
+- Australia
+- English-speaking digital wellbeing users
+- Open-source developers
+- Android users
+- Productivity / self-improvement communities
+- Digital minimalism communities
+- NoSurf communities
+- Indie hacker communities
+
+Do not build the initial product around Chinese platforms or Chinese operations.
+
+The initial product language should be English.
+
+---
+
+## 5. MVP Scope
+
+Build the MVP for **Android first**.
+
+Do not build iOS first because iOS system-level app blocking is more restricted.
+
+The MVP should support:
+
+### 5.1 App Rules
+
+The user can add rules for specific apps:
+
+- TikTok
+- Instagram
+- YouTube
+- Snapchat
+- Facebook
+- X
+- Reddit
+- Any custom package name
+
+Each rule can include:
+
+- Enable / disable
+- Daily limit
+- Session limit
+- Cooldown time
+- Gentle reminder
+- Hard block after limit
+- Temporary override
+
+Example:
+
+```text
+TikTok:
+- Daily limit: 20 minutes
+- Session reminder: 5 minutes
+- Cooldown: 30 minutes
+- Temporary override: 1 minute
+```
+
+---
+
+### 5.2 Blocking Screen
+
+When the user hits a rule, show a calm intervention screen.
+
+Tone should be warm, not judgmental.
+
+Example copy:
+
+```text
+Pause for a second.
+
+You've been scrolling for 8 minutes.
+This might not be what you meant to do.
+
+Take a breath. Choose intentionally.
+```
+
+Buttons:
+
+```text
+Close app
+Take a 5-minute break
+Give me 1 more minute
+```
+
+Avoid shame-based copy such as:
+
+- You failed again
+- You have no self-control
+- Stop being lazy
+- You are addicted
+
+The tone should be:
+
+- Calm
+- Respectful
+- Adult
+- Clear
+- Minimal
+
+---
+
+### 5.3 Friction-Based Override
+
+The user can override a block, but it should require slight friction.
+
+Examples:
+
+```text
+Type: I choose to continue
+```
+
+or:
+
+```text
+Wait 10 seconds before continuing
+```
+
+The goal is not to force the user.
+
+The goal is to break autopilot behavior.
+
+---
+
+### 5.4 Usage Stats
+
+Keep stats simple.
+
+Home screen should show:
+
+- Time protected today
+- Number of interventions today
+- High-risk app usage today
+- Active rules
+- 7-day trend
+
+Example:
+
+```text
+You protected 42 minutes of attention today.
+7 interventions helped you pause.
+```
+
+---
+
+### 5.5 Whitelist Windows
+
+Users can define allowed entertainment windows.
+
+Example:
+
+```text
+12:00 PM - 12:30 PM
+8:00 PM - 8:30 PM
+```
+
+This makes the tool feel flexible rather than punitive.
+
+---
+
+### 5.6 Local-First Data
+
+All data should be stored locally by default.
+
+No account required.
+
+No cloud required.
+
+No tracking.
+
+No ads.
+
+No analytics by default.
+
+The README and privacy docs must clearly state:
+
+- We do not collect browsing content
+- We do not upload usage history
+- We do not sell data
+- We do not show ads
+- We do not track users
+- All rules and stats are local by default
+
+---
+
+## 6. Technical Direction
+
+Build Android MVP first.
+
+Recommended stack:
+
+- Kotlin
+- Jetpack Compose
+- Room
+- DataStore
+- UsageStatsManager
+- Accessibility Service
+- Foreground Service
+- Material 3
+- Kotlin Coroutines
+- JUnit for RuleEngine tests
+
+Project structure:
+
+```text
+focusguard/
+  app/
+    src/main/java/com/focusguard/
+      ui/
+        onboarding/
+        home/
+        rules/
+        ruleedit/
+        block/
+        stats/
+        settings/
+      data/
+        db/
+        entity/
+        repository/
+        datastore/
+      domain/
+        rule/
+        usage/
+        cooldown/
+        whitelist/
+      service/
+        UsageMonitorService
+        AccessibilityBlockService
+        AppForegroundDetector
+      design/
+        theme/
+        components/
+      utils/
+  docs/
+    architecture.md
+    privacy.md
+    product-design.md
+    rules.md
+    launch-plan.md
+    community-strategy.md
+    social-copy.md
+  README.md
+  ROADMAP.md
+  CONTRIBUTING.md
+  CODE_OF_CONDUCT.md
+  SECURITY.md
+  CHANGELOG.md
+  LICENSE
+```
+
+---
+
+## 7. Core Rule Engine
+
+Implement a clean RuleEngine.
+
+The RuleEngine should be independent from UI.
+
+Pseudo-code:
+
+```kotlin
+fun evaluate(
+    appPackage: String,
+    currentTimeMillis: Long
+): BlockDecision {
+    val rule = ruleRepository.getRule(appPackage)
+
+    if (rule == null || !rule.enabled) {
+        return BlockDecision.Allow
+    }
+
+    if (whitelistChecker.isInWhitelist(currentTimeMillis)) {
+        return BlockDecision.Allow
+    }
+
+    val cooldown = cooldownManager.getCooldown(appPackage)
+    if (cooldown.isActive) {
+        return BlockDecision.Block(
+            reason = BlockReason.COOLDOWN_ACTIVE
+        )
+    }
+
+    val todayUsage = usageTracker.getTodayUsageMinutes(appPackage)
+    if (todayUsage >= rule.dailyLimitMinutes) {
+        cooldownManager.startCooldown(appPackage, rule.cooldownMinutes)
+        return BlockDecision.Block(
+            reason = BlockReason.DAILY_LIMIT_REACHED
+        )
+    }
+
+    val sessionUsage = usageTracker.getCurrentSessionMinutes(appPackage)
+    if (sessionUsage >= rule.sessionLimitMinutes) {
+        return BlockDecision.Warn(
+            reason = BlockReason.SESSION_LIMIT_REACHED
+        )
+    }
+
+    return BlockDecision.Allow
+}
+```
+
+Add unit tests for:
+
+- No rule
+- Disabled rule
+- Whitelist window
+- Daily limit reached
+- Session limit reached
+- Active cooldown
+- Temporary override
+
+---
+
+## 8. UI Design Direction
+
+The app should look polished enough for:
+
+- GitHub screenshots
+- Product Hunt launch
+- Reddit posts
+- X posts
+- Indie Hacker posts
+- Future app store screenshots
+
+Visual style:
+
+- Calm
+- Minimal
+- Modern
+- Trustworthy
+- Not corporate
+- Not childish
+- Not medical
+- Not like parental control software
+
+Suggested visual language:
+
+- Off-white background
+- Deep charcoal text
+- Soft green or blue accent
+- Rounded cards
+- Minimal icons
+- Gentle charts
+- Clear rule cards
+- Beautiful empty states
+
+Home screen example:
+
+```text
+FocusGuard
+
+You protected 42 minutes of attention today.
+
+[Today]
+Interventions: 7
+High-risk usage: 18 min
+Active rules: 5
+
+[Active Rules]
+TikTok        20 min/day        On
+Instagram     15 min/day        On
+YouTube       Shorts limit      On
+Reddit        30 min/day        On
+
+[Add Rule]
+```
+
+Blocking screen example:
+
+```text
+Pause.
+
+You've been scrolling for 8 minutes.
+
+This might be a good moment to step away.
+
+[Close app]
+[Take a 5-minute break]
+[Give me 1 more minute]
+```
+
+---
+
+## 9. Open-Source Requirements
+
+Generate a complete GitHub-ready open-source project.
+
+Must include:
+
+```text
+README.md
+LICENSE
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+SECURITY.md
+ROADMAP.md
+CHANGELOG.md
+docs/
+  architecture.md
+  privacy.md
+  product-design.md
+  rules.md
+  launch-plan.md
+  community-strategy.md
+  social-copy.md
+```
+
+Use MIT License unless there is a strong reason not to.
+
+README must be excellent.
+
+README should include:
+
+1. One-sentence pitch
+2. Screenshot placeholders
+3. Why this exists
+4. Core features
+5. Privacy principles
+6. Installation
+7. Build from source
+8. Architecture
+9. Roadmap
+10. Contributing guide
+11. Community links
+12. Star request
+
+README first screen should look like this:
+
+```md
+# FocusGuard
+
+An open-source attention firewall for short videos and infinite feeds.
+
+FocusGuard helps you block addictive apps like TikTok, Instagram Reels, YouTube Shorts, Reddit, and X — with rules you control.
+
+No ads. No tracking. No shame. Local-first by default.
+
+> Like AdBlock, but for addictive feeds.
+```
+
+---
+
+## 10. Product Roadmap
+
+Create `ROADMAP.md`.
+
+Suggested roadmap:
+
+### v0.1 Android MVP
+
+- Android app
+- App usage monitoring
+- Custom app rules
+- Daily limits
+- Session reminders
+- Cooldown
+- Temporary override
+- Local stats
+- Blocking screen
+- Local-first settings
+
+### v0.2 Better Android Experience
+
+- Better onboarding
+- Rule presets for TikTok, Instagram, YouTube, Reddit, X
+- Export / import rules
+- Better charts
+- More reliable foreground detection
+- More polished block screen
+
+### v0.3 Browser Extension
+
+- Chrome extension
+- Firefox extension
+- YouTube Shorts blocking
+- Instagram Reels blocking
+- TikTok web blocking
+- Reddit infinite scroll interruption
+- X feed interruption
+
+### v0.4 Community Rules
+
+- Community-maintained rule templates
+- Optional rule marketplace
+- Public blocklists
+- Local import only by default
+
+### v0.5 Optional Sync
+
+- Optional encrypted sync
+- No default cloud
+- User-owned data export
+
+---
+
+## 11. Privacy and Ethics
+
+Create `docs/privacy.md`.
+
+Clearly explain:
+
+- Local-first by default
+- No account required
+- No ads
+- No analytics by default
+- No selling data
+- No browsing content collection
+- No upload of app usage history
+- User can delete all data
+- Accessibility Service usage is limited and transparent
+
+For Android Accessibility Service, explain:
+
+```text
+FocusGuard uses Android Accessibility Service only to detect foreground app context and show interventions when user-defined rules are triggered.
+
+FocusGuard does not read your messages.
+FocusGuard does not record your screen.
+FocusGuard does not collect your keystrokes.
+FocusGuard does not upload Accessibility data.
+```
+
+Ethical principles:
+
+- No shame-based design
+- No dark patterns
+- No forced productivity ideology
+- User remains in control
+- Temporary override is allowed
+- The app supports intentional use, not total abstinence
+
+---
+
+## 12. Community-First Growth Strategy
+
+This project must be built as a community-driven open-source project.
+
+Create `docs/community-strategy.md`.
+
+Main growth market:
+
+- United States
+- Canada
+- United Kingdom
+- Australia
+- English-speaking developer and digital wellbeing communities
+
+Do not write content for Chinese platforms.
+
+Do not include Xiaohongshu, WeChat, Zhihu, Juejin, or V2EX in the main launch plan.
+
+Focus on native English-speaking communities:
+
+- Reddit
+- Hacker News
+- Product Hunt
+- GitHub
+- X / Twitter
+- Indie Hackers
+- Dev.to
+- Medium
+- LinkedIn
+- Discord communities
+- Digital minimalism communities
+- ADHD productivity communities
+- Open-source communities
+- Android developer communities
+
+Important tone guidance:
+
+- Native English
+- Not translated from Chinese
+- Avoid over-selling
+- Avoid fake hype
+- Avoid corporate marketing language
+- Honest builder language
+- The project should feel like: “I built this because I needed it myself.”
+
+Avoid:
+
+> Revolutionary AI-powered productivity platform.
+
+Prefer:
+
+> I wanted something like AdBlock, but for addictive feeds — so I started building FocusGuard.
+
+---
+
+## 13. Community Positioning
+
+Position the project around these themes.
+
+### Main angle
+
+```text
+Show HN: I built an open-source attention firewall for addictive feeds
+```
+
+### Alternative angles
+
+```text
+Like AdBlock, but for TikTok, Reels, Shorts, and infinite feeds.
+```
+
+```text
+A local-first Android app to interrupt doomscrolling without tracking you.
+```
+
+```text
+I don't want to ban entertainment. I just want a stopping cue.
+```
+
+```text
+No shame, no ads, no cloud. Just a small tool to help you pause.
+```
+
+```text
+An open-source alternative to manipulative attention economy design.
+```
+
+---
+
+## 14. Launch Plan
+
+Create `docs/launch-plan.md`.
+
+The launch plan should include:
+
+### Phase 0: Pre-launch
+
+Tasks:
+
+- Build MVP
+- Create GitHub repo
+- Write polished README
+- Add screenshots
+- Record 15-second demo GIF
+- Create GitHub issues for good first issues
+- Add contribution guide
+- Add privacy page
+- Prepare launch posts
+- Prepare landing page
+- Prepare Product Hunt assets
+
+### Phase 1: Soft Launch
+
+Target communities:
+
+- r/digitalminimalism
+- r/nosurf
+- r/productivity
+- r/androidapps
+- r/selfhosted if relevant
+- r/opensource
+- r/SideProject
+- Indie Hackers
+- Dev.to
+- X / Twitter
+
+Goal:
+
+- Get first 20 users
+- Get first 10 GitHub stars
+- Collect feedback
+- Fix obvious bugs
+- Improve onboarding
+
+### Phase 2: Developer Launch
+
+Target communities:
+
+- Hacker News
+- GitHub trending attempts
+- r/programming
+- r/androiddev
+- r/kotlin
+- Dev.to
+- Medium technical article
+
+Goal:
+
+- Explain architecture
+- Get contributors
+- Get technical feedback
+- Reach 50+ GitHub stars
+
+### Phase 3: Public Launch
+
+Target:
+
+- Product Hunt
+- Larger Reddit posts
+- Digital wellbeing newsletters
+- Open-source newsletters
+- Android app reviewers
+- YouTube productivity creators
+- TikTok creators talking about quitting TikTok
+
+Goal:
+
+- Reach 100+ GitHub stars
+- Get early contributors
+- Build GitHub Discussions community
+
+---
+
+## 15. Reddit Launch Content
+
+Create `docs/social-copy.md`.
+
+Generate native Reddit posts for:
+
+### r/digitalminimalism
+
+Tone:
+
+- Personal
+- Reflective
+- Not too technical
+
+Title examples:
+
+```text
+I built a small open-source app to interrupt short-video scrolling
+```
+
+```text
+I wanted an AdBlock for addictive feeds, so I started building one
+```
+
+Post should include:
+
+- Personal motivation
+- Problem
+- What the app does
+- Privacy-first promise
+- GitHub link placeholder
+- Ask for feedback
+
+---
+
+### r/nosurf
+
+Tone:
+
+- Honest
+- Supportive
+- Community-aware
+- Not promotional
+
+Title:
+
+```text
+I’m building an open-source tool to add stopping cues to TikTok/Reels/Shorts
+```
+
+Avoid sounding like spam.
+
+---
+
+### r/androidapps
+
+Tone:
+
+- Practical
+- Feature-focused
+
+Title:
+
+```text
+[DEV] FocusGuard — open-source app blocker for TikTok, Reels, Shorts, and infinite feeds
+```
+
+Mention:
+
+- Android only for now
+- Local-first
+- No ads
+- No tracking
+- Open-source
+- Looking for testers
+
+---
+
+### r/opensource
+
+Tone:
+
+- Developer-friendly
+
+Title:
+
+```text
+FocusGuard: open-source attention firewall for short videos and infinite feeds
+```
+
+Mention:
+
+- Kotlin
+- Jetpack Compose
+- Rule engine
+- Privacy-first
+- Looking for contributors
+
+---
+
+## 16. Hacker News Launch Copy
+
+Generate a Hacker News post.
+
+Title:
+
+```text
+Show HN: FocusGuard – open-source attention firewall for addictive feeds
+```
+
+Post body:
+
+```text
+Hi HN,
+
+I built FocusGuard because I wanted something like AdBlock, but for addictive feeds.
+
+It is an open-source Android app that lets you create local rules for apps like TikTok, Instagram, YouTube Shorts, Reddit, and X.
+
+The goal is not to shame users or block entertainment entirely. It simply adds stopping cues: daily limits, session reminders, cooldowns, and friction-based overrides.
+
+Everything is local-first by default. No account, no ads, no tracking.
+
+GitHub: [link]
+Demo: [link]
+
+I would love feedback, especially on Android reliability, privacy concerns, and rule design.
+```
+
+---
+
+## 17. Product Hunt Launch Copy
+
+Create Product Hunt launch assets.
+
+Include:
+
+- Product name
+- Tagline
+- Short description
+- Long description
+- Maker comment
+- First comment
+- 5 screenshot captions
+- 5 launch tweets
+- FAQ
+
+Positioning:
+
+```text
+An open-source attention firewall for short videos and infinite feeds.
+```
+
+Product Hunt tone:
+
+- Friendly
+- Clear
+- Benefit-focused
+- Not too technical
+
+---
+
+## 18. X / Twitter Content
+
+Generate 20 X posts.
+
+Style:
+
+- Native English
+- Indie builder tone
+- Not too polished
+- Not corporate
+- Not AI-generated sounding
+
+Content buckets:
+
+1. Building in public
+2. Problem insight
+3. Demo post
+4. Privacy-first angle
+5. Open-source angle
+6. Personal story
+7. Call for contributors
+8. Launch announcement
+9. Product Hunt launch
+10. Lessons learned
+
+Example style:
+
+```text
+I don’t want to quit YouTube.
+
+I just want YouTube Shorts to stop hijacking 40 minutes of my day.
+
+So I’m building FocusGuard — an open-source attention firewall for short videos and infinite feeds.
+```
+
+---
+
+## 19. Dev.to / Medium Technical Article
+
+Generate a technical article outline and draft.
+
+Title:
+
+```text
+Building an Open-Source Attention Firewall for Android with Kotlin and Jetpack Compose
+```
+
+Include:
+
+- Why I built it
+- Product constraints
+- Android UsageStatsManager
+- Accessibility Service
+- RuleEngine design
+- Local-first privacy model
+- UI architecture
+- Open-source roadmap
+- Lessons learned
+
+---
+
+## 20. GitHub Issues for Community
+
+Create 15 GitHub issue templates or starter issues.
+
+Labels:
+
+- good first issue
+- help wanted
+- android
+- design
+- documentation
+- privacy
+- rule-engine
+- browser-extension
+- community
+
+Example issues:
+
+```text
+Add preset rule for TikTok
+Improve onboarding copy
+Add 7-day usage chart
+Write docs for Accessibility Service privacy
+Add export/import for rules
+Create Chrome extension prototype
+Improve block screen animations
+Add dark mode
+Add app icon
+Add demo GIF to README
+```
+
+---
+
+## 21. Discord / GitHub Discussions Strategy
+
+Recommend whether to start with GitHub Discussions or Discord.
+
+Preference:
+
+Start with GitHub Discussions first.
+
+Reason:
+
+- Lower maintenance
+- Better for open-source
+- Public and searchable
+- Keeps community close to the repo
+
+Create GitHub Discussions categories:
+
+- Ideas
+- Help
+- Show your setup
+- Rule presets
+- Android bugs
+- Browser extension
+- Privacy questions
+
+---
+
+## 22. Landing Page Copy
+
+Create landing page copy.
+
+Structure:
+
+```text
+Hero:
+An open-source attention firewall for addictive feeds.
+
+Subheadline:
+Block TikTok, Reels, Shorts, Reddit, X, and other infinite feeds with rules you control. Local-first. No ads. No tracking.
+
+CTA:
+View on GitHub
+Download Android Beta
+
+Sections:
+- Why FocusGuard exists
+- How it works
+- Privacy-first by design
+- Built for adults, not parental control
+- Open-source roadmap
+- Community
+```
+
+---
+
+## 23. Demo GIF Script
+
+Create a 15-second demo GIF script for README and social posts.
+
+Suggested flow:
+
+1. Open FocusGuard
+2. See today's protected time
+3. Add rule for TikTok
+4. Set 20 min daily limit and 5 min session reminder
+5. Trigger block screen
+6. Show calm pause screen
+7. Return to home
+8. Show updated intervention count
+
+---
+
+## 24. App Store / F-Droid Future Plan
+
+Generate future release plan for:
+
+- GitHub APK release
+- F-Droid
+- Google Play
+
+Important:
+
+Google Play may be sensitive around Accessibility Service usage.
+
+Please document:
+
+- Why Accessibility is needed
+- How we avoid abuse
+- What user data is not collected
+- How to write Play Store disclosure
+
+---
+
+## 25. Implementation Order
+
+Please implement the project in this order.
+
+### Step 1
+
+Create the Android project structure.
+
+### Step 2
+
+Create README and docs first, so the open-source positioning is clear.
+
+### Step 3
+
+Implement the local data model.
+
+### Step 4
+
+Implement the RuleEngine with tests.
+
+### Step 5
+
+Implement Jetpack Compose UI screens.
+
+### Step 6
+
+Implement UsageStatsManager and basic foreground app detection.
+
+### Step 7
+
+Implement Accessibility Service integration and blocking screen.
+
+### Step 8
+
+Implement local stats.
+
+### Step 9
+
+Add sample presets for TikTok, Instagram, YouTube, Reddit, X.
+
+### Step 10
+
+Generate all launch content and community operation docs.
+
+---
+
+## 26. Output Requirements
+
+At the end, please provide:
+
+1. A working Android MVP
+2. A polished GitHub README
+3. Complete open-source docs
+4. RuleEngine unit tests
+5. Native English launch copy
+6. Reddit posts
+7. Hacker News post
+8. Product Hunt assets
+9. X / Twitter posts
+10. Dev.to technical article
+11. GitHub issue templates
+12. Community strategy
+13. Launch checklist
+
+---
+
+## 27. Important Product Voice
+
+The product voice should be:
+
+- Calm
+- Honest
+- Native English
+- Anti-dark-pattern
+- Privacy-aware
+- Open-source friendly
+- Builder-led
+- Human
+- Not corporate
+- Not preachy
+- Not shame-based
+- Not “AI productivity guru”
+
+Avoid phrases like:
+
+- Unlock your productivity potential
+- Revolutionary
+- AI-powered transformation
+- 10x your life
+- Beat addiction instantly
+- Become your best self
+
+Prefer phrases like:
+
+- I built this because I needed it
+- A small tool to help you pause
+- Rules you control
+- No shame
+- No tracking
+- Local-first
+- Like AdBlock, but for addictive feeds
+
+---
+
+## 28. Final Reminder
+
+This project should feel like a serious open-source tool with a real point of view.
+
+The core idea:
+
+> Modern apps removed stopping cues. FocusGuard puts them back.
+
+Build the app and the open-source community around that idea.
+
+The app is important.
+
+The operation and community are also important.
+
+Please treat development, open-source packaging, and community launch as one integrated product effort.

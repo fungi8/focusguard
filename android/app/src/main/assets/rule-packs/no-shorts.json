@@ -1,0 +1,56 @@
+{
+  "id": "no-shorts",
+  "name": "No Shorts",
+  "description": "Blocks short-form feed surfaces while keeping search, messages, and subscriptions open.",
+  "apps": [
+    {
+      "app": "YouTube",
+      "package": "com.google.android.youtube",
+      "surfaces": [
+        {
+          "id": "shorts",
+          "name": "Shorts",
+          "action": "block",
+          "daily_limit_minutes": 0,
+          "cooldown_minutes": 30,
+          "override_mode": "type_phrase",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "app": "Instagram",
+      "package": "com.instagram.android",
+      "surfaces": [
+        {
+          "id": "reels",
+          "name": "Reels",
+          "action": "block",
+          "cooldown_minutes": 30,
+          "override_mode": "wait_10_seconds",
+          "enabled": true
+        },
+        {
+          "id": "explore",
+          "name": "Explore",
+          "action": "warn",
+          "session_limit_minutes": 5,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "app": "TikTok",
+      "package": "com.zhiliaoapp.musically",
+      "surfaces": [
+        {
+          "id": "main_feed",
+          "name": "Main feed",
+          "action": "intent_gate",
+          "override_mode": "ask_intent",
+          "enabled": true
+        }
+      ]
+    }
+  ]
+}

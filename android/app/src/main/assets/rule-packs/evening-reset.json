@@ -1,0 +1,44 @@
+{
+  "id": "evening-reset",
+  "name": "Evening Reset",
+  "description": "Adds stronger boundaries around late-night infinite feeds while preserving intentional windows.",
+  "apps": [
+    {
+      "app": "YouTube",
+      "package": "com.google.android.youtube",
+      "surfaces": [
+        {
+          "id": "shorts",
+          "name": "Shorts",
+          "action": "block",
+          "cooldown_minutes": 45,
+          "override_mode": "type_phrase",
+          "enabled": true,
+          "chosen_windows": [
+            {
+              "id": "evening-unwind",
+              "label": "Evening unwind",
+              "start": "20:00",
+              "end": "20:30",
+              "enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "app": "Reddit",
+      "package": "com.reddit.frontpage",
+      "surfaces": [
+        {
+          "id": "popular",
+          "name": "Popular",
+          "action": "block",
+          "cooldown_minutes": 45,
+          "override_mode": "wait_10_seconds",
+          "enabled": true
+        }
+      ]
+    }
+  ]
+}

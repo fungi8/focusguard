@@ -1,0 +1,19 @@
+.DS_Store
+
+# Android / Gradle
+.gradle/
+build/
+**/build/
+local.properties
+*.iml
+
+# IDE
+.idea/
+.vscode/
+
+# APK outputs
+*.apk
+*.aab
+
+# Logs
+*.log

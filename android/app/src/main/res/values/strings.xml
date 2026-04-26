@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">FocusGuard</string>
+    <string name="accessibility_service_label">FocusGuard Surface Detection</string>
+    <string name="accessibility_service_description">Detects user-defined high-risk surfaces and shows FocusGuard moments of choice. No screen recording, message reading, keystroke collection, or data upload.</string>
+</resources>

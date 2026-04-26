@@ -1,0 +1,69 @@
+{
+  "id": "essential",
+  "name": "Essential",
+  "description": "Blocks the most common attention traps while keeping useful paths open.",
+  "apps": [
+    {
+      "app": "YouTube",
+      "package": "com.google.android.youtube",
+      "surfaces": [
+        {
+          "id": "shorts",
+          "name": "Shorts",
+          "action": "block",
+          "daily_limit_minutes": 0,
+          "session_limit_minutes": 0,
+          "cooldown_minutes": 30,
+          "override_mode": "type_phrase",
+          "enabled": true
+        },
+        {
+          "id": "home_feed",
+          "name": "Home feed",
+          "action": "warn",
+          "session_limit_minutes": 5,
+          "enabled": true
+        },
+        {
+          "id": "subscriptions",
+          "name": "Subscriptions",
+          "action": "allow",
+          "enabled": true
+        },
+        {
+          "id": "search",
+          "name": "Search",
+          "action": "allow",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "app": "Reddit",
+      "package": "com.reddit.frontpage",
+      "surfaces": [
+        {
+          "id": "popular",
+          "name": "Popular",
+          "action": "block",
+          "cooldown_minutes": 30,
+          "override_mode": "wait_10_seconds",
+          "enabled": true
+        },
+        {
+          "id": "all",
+          "name": "All",
+          "action": "warn",
+          "session_limit_minutes": 5,
+          "enabled": true
+        },
+        {
+          "id": "joined",
+          "name": "Joined communities",
+          "action": "allow",
+          "enabled": true
+        }
+      ]
+    }
+  ]
+}

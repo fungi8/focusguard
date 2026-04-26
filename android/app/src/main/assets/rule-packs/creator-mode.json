@@ -1,0 +1,51 @@
+{
+  "id": "creator-mode",
+  "name": "Creator Mode",
+  "description": "Allows posting, messages, and analytics while adding friction to consumption-heavy surfaces.",
+  "apps": [
+    {
+      "app": "Instagram",
+      "package": "com.instagram.android",
+      "surfaces": [
+        {
+          "id": "reels",
+          "name": "Reels",
+          "action": "block",
+          "override_mode": "wait_10_seconds",
+          "enabled": true
+        },
+        {
+          "id": "dm",
+          "name": "DMs",
+          "action": "allow",
+          "enabled": true
+        },
+        {
+          "id": "profile",
+          "name": "Profile",
+          "action": "allow",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "app": "X",
+      "package": "com.twitter.android",
+      "surfaces": [
+        {
+          "id": "for_you",
+          "name": "For You",
+          "action": "intent_gate",
+          "override_mode": "ask_intent",
+          "enabled": true
+        },
+        {
+          "id": "dm",
+          "name": "DMs",
+          "action": "allow",
+          "enabled": true
+        }
+      ]
+    }
+  ]
+}

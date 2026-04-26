@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.FocusGuard" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/fg_canvas</item>
+        <item name="android:navigationBarColor">@color/fg_canvas</item>
+    </style>
+</resources>
